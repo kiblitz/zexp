@@ -6,4 +6,5 @@ comptime {
     _ = @import("sexp_of_array.zig");
     _ = @import("sexp_of_optional.zig");
     _ = @import("sexp_of_enum.zig");
+    _ = @import("sexp_of_struct.zig");
 }

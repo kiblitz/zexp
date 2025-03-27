@@ -8,7 +8,6 @@ pub fn sexp_of(buf: std.io.AnyWriter, v: anytype) anyerror!void {
         // not a runtime error but a compiletime error.
         //
         // See issue #513
-
         switch (@typeInfo(@TypeOf(v))) {
             .bool => sexp_of_bool,
             .int => sexp_of_numeric,
@@ -34,6 +33,7 @@ pub fn sexp_of(buf: std.io.AnyWriter, v: anytype) anyerror!void {
                 sexp_of_tagged_enum
             else
                 @compileError("Cannot sexpify non-tagged union"),
+            .@"struct" => sexp_of_struct,
             else => @compileError(
                 "Cannot sexpify types: " ++ @typeName(@TypeOf(v)),
             ),
@@ -51,31 +51,6 @@ fn sexp_of_bool(buf: std.io.AnyWriter, v: bool) !void {
 
 fn sexp_of_numeric(buf: std.io.AnyWriter, v: anytype) !void {
     try std.fmt.format(buf, "{d}", .{v});
-}
-
-fn sexp_of_enum(buf: std.io.AnyWriter, v: anytype) !void {
-    try std.fmt.format(buf, "{s}", .{@tagName(v)});
-}
-
-fn sexp_of_tagged_enum(buf: std.io.AnyWriter, v: anytype) !void {
-    try std.fmt.format(buf, "({s}", .{@tagName(v)});
-    switch (v) {
-        inline else => |tag| if (@TypeOf(tag) != void) {
-            try std.fmt.format(buf, " ", .{});
-            try sexp_of(buf, tag);
-        },
-    }
-    try std.fmt.format(buf, ")", .{});
-}
-
-fn sexp_of_optional(buf: std.io.AnyWriter, maybe_v: anytype) !void {
-    if (maybe_v) |v| {
-        try std.fmt.format(buf, "(", .{});
-        try sexp_of(buf, v);
-        try std.fmt.format(buf, ")", .{});
-    } else {
-        try std.fmt.format(buf, "()", .{});
-    }
 }
 
 fn sexp_of_pointer(buf: std.io.AnyWriter, v: anytype) !void {
@@ -101,6 +76,41 @@ fn sexp_of_vector(buf: std.io.AnyWriter, v: anytype) !void {
         if (i > 0)
             try std.fmt.format(buf, " ", .{});
         try sexp_of(buf, v[i]);
+    }
+    try std.fmt.format(buf, ")", .{});
+}
+
+fn sexp_of_optional(buf: std.io.AnyWriter, maybe_v: anytype) !void {
+    if (maybe_v) |v| {
+        try std.fmt.format(buf, "(", .{});
+        try sexp_of(buf, v);
+        try std.fmt.format(buf, ")", .{});
+    } else {
+        try std.fmt.format(buf, "()", .{});
+    }
+}
+
+fn sexp_of_enum(buf: std.io.AnyWriter, v: anytype) !void {
+    try std.fmt.format(buf, "{s}", .{@tagName(v)});
+}
+
+fn sexp_of_tagged_enum(buf: std.io.AnyWriter, v: anytype) !void {
+    try std.fmt.format(buf, "({s}", .{@tagName(v)});
+    switch (v) {
+        inline else => |tag| if (@TypeOf(tag) != void) {
+            try std.fmt.format(buf, " ", .{});
+            try sexp_of(buf, tag);
+        },
+    }
+    try std.fmt.format(buf, ")", .{});
+}
+
+fn sexp_of_struct(buf: std.io.AnyWriter, v: anytype) !void {
+    try std.fmt.format(buf, "(", .{});
+    inline for (std.meta.fields(@TypeOf(v))) |field| {
+        try std.fmt.format(buf, "({s} ", .{field.name});
+        try sexp_of(buf, @field(v, field.name));
+        try std.fmt.format(buf, ")", .{});
     }
     try std.fmt.format(buf, ")", .{});
 }
