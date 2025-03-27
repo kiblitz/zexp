@@ -50,11 +50,12 @@ pub const simple_struct = struct {
     fred: [3]i8,
 };
 
-pub const simple_struct_inst = simple_struct{
-    .foo = 7,
-    .bar = false,
-    .qux = null,
-    .corge = 3.14159265,
-    .thud = "gl",
-    .fred = [3]i8{ 1, 2, 3 },
+pub const deep_struct = struct {
+    foo: struct {
+        qux: i32,
+        corge: ?bool,
+    },
+    bar: struct {
+        thud: enum { fred },
+    },
 };
