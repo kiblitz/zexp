@@ -33,7 +33,7 @@ test "numerical -- unsigned int" {
 
     try util.unit_test(
         &buf,
-        3,
+        @as(u32, 3),
         "3",
     );
 }
@@ -44,7 +44,7 @@ test "numerical -- floating point" {
 
     try util.unit_test(
         &buf,
-        0,
+        @as(f32, 0),
         "0",
     );
     try util.unit_test(
