@@ -8,8 +8,8 @@ pub inline fn make_buffer() std.ArrayList(u8) {
     return std.ArrayList(u8).init(allocator);
 }
 
-pub fn unit_test(buf: *std.ArrayList(u8), t: type, value: t, expect: []const u8) !void {
-    try zexp.sexp_of(t)(buf.writer().any(), value);
+pub fn unit_test(buf: *std.ArrayList(u8), value: anytype, expect: []const u8) !void {
+    try zexp.sexp_of(buf.writer().any(), value);
     try std.testing.expectEqualStrings(expect, buf.items);
     buf.clearRetainingCapacity();
 }

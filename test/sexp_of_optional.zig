@@ -7,8 +7,12 @@ test "optional -- none" {
 
     try util.unit_test(
         &buf,
-        ?bool,
         null,
+        "()",
+    );
+    try util.unit_test(
+        &buf,
+        @as(?i32, null),
         "()",
     );
 }
@@ -18,32 +22,27 @@ test "optional -- some immediate" {
 
     try util.unit_test(
         &buf,
-        ?i32,
-        3,
+        @as(?i32, 3),
         "(3)",
     );
     try util.unit_test(
         &buf,
-        ?i32,
-        -19,
+        @as(?i32, -19),
         "(-19)",
     );
     try util.unit_test(
         &buf,
-        ?u32,
-        std.math.maxInt(i32),
+        @as(?i32, std.math.maxInt(i32)),
         "(2147483647)",
     );
     try util.unit_test(
         &buf,
-        ?f32,
-        3.14159,
+        @as(?f64, 3.14159),
         "(3.14159)",
     );
     try util.unit_test(
         &buf,
-        ?bool,
-        false,
+        @as(?bool, false),
         "(false)",
     );
 }
@@ -61,14 +60,12 @@ test "optional -- some enum" {
 
     try util.unit_test(
         &buf,
-        ?simple_enum,
-        simple_enum.bar,
+        @as(?simple_enum, simple_enum.bar),
         "(bar)",
     );
     try util.unit_test(
         &buf,
-        ?simple_enum,
-        simple_enum.fred,
+        @as(?simple_enum, simple_enum.fred),
         "(fred)",
     );
 }
