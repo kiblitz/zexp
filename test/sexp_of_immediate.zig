@@ -3,9 +3,7 @@ const std = @import("std");
 const util = @import("util.zig");
 
 test "numerical -- signed int" {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = gpa.allocator();
-    var buf = std.ArrayList(u8).init(allocator);
+    var buf = util.make_buffer();
 
     try util.unit_test(
         &buf,
@@ -34,9 +32,8 @@ test "numerical -- signed int" {
 }
 
 test "numerical -- unsigned int" {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = gpa.allocator();
-    var buf = std.ArrayList(u8).init(allocator);
+    var buf = util.make_buffer();
+    defer buf.deinit();
 
     try util.unit_test(
         &buf,
@@ -47,9 +44,8 @@ test "numerical -- unsigned int" {
 }
 
 test "numerical -- floating point" {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = gpa.allocator();
-    var buf = std.ArrayList(u8).init(allocator);
+    var buf = util.make_buffer();
+    defer buf.deinit();
 
     try util.unit_test(
         &buf,
@@ -72,9 +68,8 @@ test "numerical -- floating point" {
 }
 
 test "bool" {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = gpa.allocator();
-    var buf = std.ArrayList(u8).init(allocator);
+    var buf = util.make_buffer();
+    defer buf.deinit();
 
     try util.unit_test(
         &buf,
