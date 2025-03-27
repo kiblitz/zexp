@@ -1,3 +1,3 @@
 #!/bin/bash
 
-zig build test --summary all
+zig build test --summary all $@
