@@ -1,6 +1,6 @@
 const std = @import("std");
 
-pub fn sexp_of(buf: std.io.AnyWriter, v: anytype) anyerror!void {
+pub fn sexp_of(buf: std.io.AnyWriter, v: anytype) !void {
     const typed_sexp_of =
         // TODO -- Add unit tests for compilation errors
         //
