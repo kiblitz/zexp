@@ -10,6 +10,7 @@ pub fn sexp_of(comptime Spec: type) sexp_of_type(Spec) {
         .float => return sexp_of_numeric(Spec),
         .bool => return sexp_of_bool,
         .optional => |optional| return sexp_of_optional(optional.child),
+        .@"enum" => return sexp_of_enum(Spec),
         else =>
         // TODO -- Add unit tests
         //
@@ -41,6 +42,14 @@ fn sexp_of_bool(buf: std.io.AnyWriter, v: bool) !void {
         true => try std.fmt.format(buf, "true", .{}),
         false => try std.fmt.format(buf, "false", .{}),
     }
+}
+
+fn sexp_of_enum(comptime Spec: type) sexp_of_type(Spec) {
+    return struct {
+        fn f(buf: std.io.AnyWriter, v: Spec) !void {
+            try std.fmt.format(buf, "{s}", .{@tagName(v)});
+        }
+    }.f;
 }
 
 fn sexp_of_optional(comptime Child: type) sexp_of_type(?Child) {

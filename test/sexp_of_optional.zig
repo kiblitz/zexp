@@ -2,7 +2,18 @@ const std = @import("std");
 
 const util = @import("util.zig");
 
-test "optional -- some" {
+test "optional -- none" {
+    var buf = util.make_buffer();
+
+    try util.unit_test(
+        &buf,
+        ?bool,
+        null,
+        "()",
+    );
+}
+
+test "optional -- some immediate" {
     var buf = util.make_buffer();
 
     try util.unit_test(
@@ -37,13 +48,27 @@ test "optional -- some" {
     );
 }
 
-test "optional -- none" {
+test "optional -- some enum" {
     var buf = util.make_buffer();
+
+    const simple_enum = enum {
+        foo,
+        bar,
+        qux,
+        corge,
+        fred,
+    };
 
     try util.unit_test(
         &buf,
-        ?bool,
-        null,
-        "()",
+        ?simple_enum,
+        simple_enum.bar,
+        "(bar)",
+    );
+    try util.unit_test(
+        &buf,
+        ?simple_enum,
+        simple_enum.fred,
+        "(fred)",
     );
 }
