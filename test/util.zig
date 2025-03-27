@@ -13,3 +13,30 @@ pub fn unit_test(buf: *std.ArrayList(u8), value: anytype, expect: []const u8) !v
     try std.testing.expectEqualStrings(expect, buf.items);
     buf.clearRetainingCapacity();
 }
+
+pub const simple_untagged_enum = enum {
+    foo,
+    bar,
+    qux,
+    corge,
+    thud,
+    fred,
+};
+
+pub const simple_named_tagged_enum = union(simple_untagged_enum) {
+    foo: i32,
+    bar: bool,
+    qux,
+    corge,
+    thud: []const u8,
+    fred,
+};
+
+pub const simple_anonymous_tagged_enum = union(enum) {
+    foo: i32,
+    bar: bool,
+    qux,
+    corge,
+    thud: []const u8,
+    fred,
+};

@@ -50,22 +50,20 @@ test "optional -- some immediate" {
 test "optional -- some enum" {
     var buf = util.make_buffer();
 
-    const simple_enum = enum {
-        foo,
-        bar,
-        qux,
-        corge,
-        fred,
-    };
-
     try util.unit_test(
         &buf,
-        @as(?simple_enum, simple_enum.bar),
+        @as(
+            ?util.simple_untagged_enum,
+            util.simple_untagged_enum.bar,
+        ),
         "(bar)",
     );
     try util.unit_test(
         &buf,
-        @as(?simple_enum, simple_enum.fred),
+        @as(
+            ?util.simple_untagged_enum,
+            util.simple_untagged_enum.fred,
+        ),
         "(fred)",
     );
 }
