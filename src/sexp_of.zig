@@ -35,7 +35,7 @@ pub fn sexp_of(buf: std.io.AnyWriter, v: anytype) !void {
                 @compileError("Cannot sexpify non-tagged union"),
             .@"struct" => sexp_of_struct,
             else => @compileError(
-                "Cannot sexpify types: " ++ @typeName(@TypeOf(v)),
+                "Cannot sexpify type: " ++ @typeName(@TypeOf(v)),
             ),
         };
 
